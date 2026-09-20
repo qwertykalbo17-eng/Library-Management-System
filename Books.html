@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Library - Books</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style3.css">
+
+    <style>
+        body {
+            display: block;
+            height: auto;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           BOOKS CONTAINER
+        ========================= */
+
+        .books-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+        }
+
+        .books-container h1 {
+            margin: 0 0 10px;
+            color: #2c3e50;
+        }
+
+        .books-container p {
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        /* =========================
+           SEARCH BAR
+        ========================= */
+
+        .book-search {
+            width: 100%;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+        }
+
+        .book-search input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        .book-search input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.25);
+        }
+
+        .book-search input::placeholder {
+            color: #999;
+        }
+
+        /* =========================
+           BOOK GRID
+        ========================= */
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* =========================
+           BOOK CARD
+        ========================= */
+
+        .book-card {
+            overflow: hidden;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =========================
+           BOOK IMAGE
+        ========================= */
+
+        .book-image {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #dfe6e9;
+            color: #777;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           BOOK INFORMATION
+        ========================= */
+
+        .book-info {
+            padding: 18px;
+        }
+
+        .book-info h2 {
+            margin: 0 0 8px;
+            color: #2c3e50;
+            font-size: 20px;
+        }
+
+        .book-info .author {
+            margin-bottom: 12px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .book-info .description {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           AVAILABILITY
+        ========================= */
+
+        .availability {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 15px;
+            background: #2ecc71;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .availability.available {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .availability.not-available {
+            background: #e74c3c;
+            color: white;
+        }
+
+        /* =========================
+           BORROW BUTTON
+        ========================= */
+
+        .book-button {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        .book-button:hover {
+            background: #2980b9;
+        }
+
+        .book-button.disabled-button {
+            background: #95a5a6;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .book-button.disabled-button:hover {
+            background: #95a5a6;
+            transform: none;
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .book-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .books-container {
+                width: 94%;
+                margin-top: 110px;
+                padding: 20px;
+            }
+
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <nav>
+        <div class="logo">
+            Library
+        </div>
+
+        <ul>
+            <li>
+                <a href="Home.html">Home</a>
+            </li>
+
+            <li>
+                <a href="Books.html">Books</a>
+            </li>
+
+            <li>
+                <a href="Borrow.html">Borrow</a>
+            </li>
+
+            <li>
+                <a href="about.html">About</a>
+            </li>
+
+            <li>
+                <a href="login.html">Logout</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- =========================
+         BOOKS SECTION
+    ========================= -->
+
+    <div class="books-container">
+
+        <h1>Library Books</h1>
+
+        <p>
+            Browse the available books in our library.
+        </p>
+
+        <!-- SEARCH BAR -->
+
+        <div class="book-search">
+            <input
+                type="text"
+                id="bookSearch"
+                placeholder="Search for a book..."
+                oninput="searchBooks()"
+            >
+        </div>
+
+        <!-- BOOK GRID -->
+
+        <div class="book-grid">
+
+            <!-- BOOK 1 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 1</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 2 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 2</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 3 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 3</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 4 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 4</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 5 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 5</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 6 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 6</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 7 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 7</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- BOOK 8 -->
+
+            <div class="book-card">
+
+                <div class="book-image">
+                    BOOK IMAGE
+                </div>
+
+                <div class="book-info">
+
+                    <h2>Book 8</h2>
+
+                    <div class="author">
+                        Author: None
+                    </div>
+
+                    <div class="description">
+                        Book Description.
+                    </div>
+
+                    <span class="availability">
+                        Available
+                    </span>
+
+                    <a
+                        href="Borrow.html"
+                        class="book-button"
+                    >
+                        Borrow Book
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- FIREBASE / JAVASCRIPT -->
+
+    <script
+        type="module"
+        src="library.js"
+    ></script>
+
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Borrow</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style3.css">
+</head>
+
+<body>
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <nav>
+
+        <div class="logo">
+            Library
+        </div>
+
+        <ul>
+
+            <li>
+                <a href="Home.html">
+                    Home
+                </a>
+            </li>
+
+            <li>
+                <a href="Books.html">
+                    Books
+                </a>
+            </li>
+
+            <li>
+                <a href="Borrow.html">
+                    Borrow
+                </a>
+            </li>
+
+            <li>
+                <a href="about.html">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="#" onclick="logout()">
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================= -->
+
+    <div class="content">
+
+        <h1>
+            Welcome, <span id="user"></span>!
+        </h1>
+
+
+        <div class="main">
+
+            <!-- =========================
+                 BORROW BOOK FORM
+            ========================= -->
+
+            <h2>
+                Borrow Book
+            </h2>
+
+            <div class="form">
+
+                <!-- Student Name -->
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Student Name"
+                >
+
+
+                <!-- Student ID -->
+
+                <input
+                    type="text"
+                    id="studentId"
+                    placeholder="Student ID"
+                >
+
+
+                <!-- Book Selection -->
+
+                <select id="bookSelect">
+
+                    <option value="">
+                        Select a Book
+                    </option>
+
+                </select>
+
+
+                <!-- Borrow Date -->
+
+                <div class="date-field">
+
+                    <label for="borrowDate">
+                        Borrow Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="borrowDate"
+                    >
+
+                </div>
+
+
+                <!-- Return Date -->
+
+                <div class="date-field">
+
+                    <label for="returnDate">
+                        Return Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="returnDate"
+                    >
+
+                </div>
+
+
+                <!-- Borrow Button -->
+
+                <button onclick="borrowBook()">
+                    Borrow
+                </button>
+
+            </div>
+
+
+            <!-- =========================
+                 BORROWED BOOKS
+            ========================= -->
+
+            <h2>
+                Borrowed Books
+            </h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <!-- Table Header -->
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Student Name
+                            </th>
+
+                            <th>
+                                Student ID
+                            </th>
+
+                            <th>
+                                Book
+                            </th>
+
+                            <th>
+                                Borrow Date
+                            </th>
+
+                            <th>
+                                Return Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- Table Content -->
+
+                    <tbody id="borrowTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FIREBASE / JAVASCRIPT
+    ========================= -->
+
+    <script
+        type="module"
+        src="library.js"
+    ></script>
+
+</body>
+
+</html>

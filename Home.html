@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<nav>
+    <div class="logo">Library</div>
+    <ul>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="books.html">Books</a></li>
+        <li><a href="borrow.html">Borrow</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+</nav>
+
+<div class="content">
+    <h1>Welcome, <span id="user"></span>!</h1>
+</div>
+
+<script>
+async function loadUser() {
+    try {
+        const response = await fetch("/api/me");
+
+        if (!response.ok) {
+            window.location.href = "Login.html";
+            return;
+        }
+
+        const result = await response.json();
+
+        document.getElementById("user").textContent =
+            result.user.username;
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to connect to the server.");
+    }
+}
+
+async function logout() {
+    try {
+        await fetch("/api/logout", {
+            method: "POST"
+        });
+
+        window.location.href = "Login.html";
+
+    } catch (error) {
+        console.error(error);
+        alert("Unable to log out.");
+    }
+}
+
+loadUser();
+</script>
+
+</body>
+</html>

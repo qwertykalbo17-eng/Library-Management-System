@@ -1,0 +1,275 @@
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background: #f4f6f9;
+}
+
+nav{
+    width: 95.6%;
+    background:#2c3e50;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 30px;
+    position: absolute;
+    top: 0%;
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo{
+    color:white;
+    font-size:24px;
+    font-weight:bold;
+}
+
+nav ul{
+    list-style:none;
+    display:flex;
+}
+
+nav ul li{
+    margin-left:20px;
+}
+
+nav ul li a{
+    color:white;
+    text-decoration:none;
+    padding:8px 15px;
+    transition:0.3s;
+}
+
+nav ul li a:hover{
+    background:#3498db;
+    border-radius:11px;
+}
+
+.content{
+    padding:30px;
+}
+
+.main{
+    background:white;
+    width:90%;
+    max-width:1100px;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.15);
+    margin-top:80px;
+}
+
+.main h1{
+    color:#2c3e50;
+    margin-bottom:25px;
+}
+
+.main h2{
+    color:#2c3e50;
+    margin-top:30px;
+    margin-bottom:20px;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form input[type="text"]{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:15px;
+    box-sizing:border-box;
+    outline:none;
+}
+
+.form select{
+    grid-column:1 / -1;
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:15px;
+    box-sizing:border-box;
+    outline:none;
+    background:white;
+    color:#111;
+}
+
+.date-field{
+    grid-column:1 / -1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.date-field label{
+    color:#2c3e50;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.date-field input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:6px;
+    font-size:15px;
+    box-sizing:border-box;
+    outline:none;
+}
+
+.form input:focus,
+.form select:focus{
+    border-color:#3498db;
+}
+
+.form button{
+    grid-column:1 / -1;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    background:#3498db;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.form button:hover{
+    background:#2980b9;
+}
+
+.table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+table th{
+    background:#2c3e50;
+    color:white;
+    padding:12px;
+}
+
+table td{
+    padding:12px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+    color:#333;
+}
+
+table tr:hover{
+    background:#f5f5f5;
+}
+
+.status{
+    padding:5px 10px;
+
+    border-radius:15px;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+.borrowed{
+    background:#3498db;
+    color:white;
+}
+
+.due{
+    background:#f1c40f;
+    color:#222;
+}
+
+
+.overdue{
+    background:#e74c3c;
+    color:white;
+}
+
+.return-btn{
+    border:none;
+
+    padding:8px 12px;
+
+    border-radius:5px;
+
+    background:#e74c3c;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.return-btn:hover{
+    background:#c0392b;
+}
+
+@media(max-width:800px){
+
+    body{
+        align-items:flex-start;
+        overflow-y:auto;
+    }
+
+    nav{
+        width:100%;
+        padding:15px;
+        box-sizing:border-box;
+        flex-direction:column;
+        gap:10px;
+    }
+
+    nav ul{
+        padding:0;
+        margin:0;
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+
+    nav ul li{
+        margin-left:5px;
+        margin-right:5px;
+    }
+
+    .content{
+        padding:20px;
+        margin-top:100px;
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    .main{
+        width:100%;
+        box-sizing:border-box;
+        padding:20px;
+        margin-top:20px;
+    }
+
+    .form{
+        grid-template-columns:1fr;
+    }
+
+    .form select,
+    .date-field,
+    .form button{
+        grid-column:auto;
+    }
+
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login & Sign Up</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
+
+    <nav>
+
+        <div class="title">
+            Welcome to Library Management System
+        </div>
+
+    </nav>
+
+
+    <!-- =========================
+         LOGIN / SIGN UP CONTAINER
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- =========================
+             SIGN UP FORM
+        ========================= -->
+
+        <div id="signupForm">
+
+            <h2>
+                Sign Up
+            </h2>
+
+
+            <!-- Username -->
+
+            <input
+                type="text"
+                id="signupUsername"
+                placeholder="Username"
+            >
+
+
+            <!-- Password -->
+
+            <input
+                type="password"
+                id="signupPassword"
+                placeholder="Password"
+            >
+
+
+            <!-- Sign Up Button -->
+
+            <button onclick="signup()">
+                Sign Up
+            </button>
+
+
+            <!-- Switch to Login -->
+
+            <p>
+
+                Already have an account?
+
+                <a
+                    href="#"
+                    onclick="showLogin()"
+                >
+                    Login
+                </a>
+
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             LOGIN FORM
+        ========================= -->
+
+        <div
+            id="loginForm"
+            style="display: none;"
+        >
+
+            <h2>
+                Login
+            </h2>
+
+
+            <!-- Username -->
+
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="Username"
+            >
+
+
+            <!-- Password -->
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+            >
+
+
+            <!-- Login Button -->
+
+            <button onclick="login()">
+                Login
+            </button>
+
+
+            <!-- Switch to Sign Up -->
+
+            <p>
+
+                Don't have an account?
+
+                <a
+                    href="#"
+                    onclick="showSignup()"
+                >
+                    Sign Up
+                </a>
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         FIREBASE / JAVASCRIPT
+    ========================= -->
+
+    <script
+        type="module"
+        src="Login1.js"
+    ></script>
+
+
+</body>
+
+</html>
