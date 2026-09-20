@@ -12,6 +12,14 @@ console.log("Starting server...");
 console.log("PORT:", PORT);
 console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
 
+process.on("uncaughtException", (error) => {
+    console.error("UNCAUGHT EXCEPTION:", error);
+});
+
+process.on("unhandledRejection", (error) => {
+    console.error("UNHANDLED REJECTION:", error);
+});
+
 // ============================================
 // DATABASE
 // ============================================
