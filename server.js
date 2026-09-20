@@ -29,7 +29,9 @@ app.use(
 // SQLITE DATABASE
 // ============================================
 
-const db = new sqlite3.Database("./library.db", (err) => {
+const db = new sqlite3.Database(
+    process.env.DB_PATH || "./library.db",
+    (err) => {
 
     if (err) {
 
