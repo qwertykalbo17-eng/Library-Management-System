@@ -472,6 +472,17 @@ app.post("/api/logout", (req, res) => {
 // START SERVER
 // ============================================
 
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+console.log("ABOUT TO START SERVER...");
+console.log("HOST: 0.0.0.0");
+console.log("PORT:", PORT);
+
+const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log("=================================");
+    console.log("SERVER IS RUNNING!");
+    console.log("PORT:", PORT);
+    console.log("=================================");
+});
+
+server.on("error", (error) => {
+    console.error("SERVER ERROR:", error);
 });
