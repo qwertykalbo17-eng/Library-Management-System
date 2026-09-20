@@ -1,9 +1,24 @@
+require("dotenv").config();
+
 const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
+const postgres = require("postgres");
 const session = require("express-session");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// ============================================
+// DATABASE
+// ============================================
+
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+    console.error("DATABASE_URL is missing.");
+    process.exit(1);
+}
+
+const sql = postgres(connectionString);
 
 // ============================================
 // MIDDLEWARE
@@ -14,219 +29,123 @@ app.use(express.static(__dirname));
 
 app.use(
     session({
-        secret: "library-management-secret",
+        secret: process.env.SESSION_SECRET || "library-management-secret",
         resave: false,
         saveUninitialized: false,
         cookie: {
             httpOnly: true,
-            sameSite: "lax"
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production"
         }
     })
 );
 
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/Login.html");
+});
 
 // ============================================
-// SQLITE DATABASE
+// DATABASE TEST
 // ============================================
 
-const db = new sqlite3.Database(
-    process.env.DB_PATH || "./library.db",
-    (err) => {
-
-    if (err) {
-
-        console.error("Database error:", err.message);
-
-    } else {
-
-        console.log("Connected to SQLite!");
-
+async function testDatabase() {
+    try {
+        await sql`SELECT 1`;
+        console.log("Connected to PostgreSQL!");
+    } catch (error) {
+        console.error("Database connection error:", error.message);
     }
+}
 
-});
-
-
-// ============================================
-// CREATE TABLES
-// ============================================
-
-db.serialize(() => {
-
-    // USERS
-    db.run(`
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )
-    `);
-
-
-    // BOOKS
-    db.run(`
-        CREATE TABLE IF NOT EXISTS books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            author TEXT,
-            description TEXT,
-            available INTEGER DEFAULT 1,
-            borrowedBy INTEGER
-        )
-    `);
-
-
-    // BORROWED BOOKS
-    db.run(`
-        CREATE TABLE IF NOT EXISTS borrowed_books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            studentName TEXT NOT NULL,
-            studentId TEXT NOT NULL,
-            bookId INTEGER NOT NULL,
-            borrowDate TEXT NOT NULL,
-            returnDate TEXT NOT NULL,
-            userId INTEGER NOT NULL,
-            returned INTEGER DEFAULT 0,
-
-            FOREIGN KEY (bookId)
-                REFERENCES books(id),
-
-            FOREIGN KEY (userId)
-                REFERENCES users(id)
-        )
-    `);
-
-
-    // ============================================
-    // CREATE INITIAL BOOKS
-    // ============================================
-
-    const books = [
-        "Book 1",
-        "Book 2",
-        "Book 3",
-        "Book 4",
-        "Book 5",
-        "Book 6",
-        "Book 7",
-        "Book 8"
-    ];
-
-
-    books.forEach((book) => {
-
-        db.run(
-            `
-            INSERT OR IGNORE INTO books
-            (title, author, description, available)
-            VALUES (?, ?, ?, 1)
-            `,
-            [
-                book,
-                "Placeholder Author",
-                "Book Description."
-            ]
-        );
-
-    });
-
-});
-
+testDatabase();
 
 // ============================================
 // TEST ROUTE
 // ============================================
 
-app.get("/api/test", (req, res) => {
+app.get("/api/test", async (req, res) => {
+    try {
+        await sql`SELECT 1`;
 
-    res.json({
-        message: "SQLite server is working!"
-    });
+        res.json({
+            message: "PostgreSQL server is working!"
+        });
+    } catch (error) {
+        console.error(error);
 
+        res.status(500).json({
+            error: "Database connection failed."
+        });
+    }
 });
-
 
 // ============================================
 // GET BOOKS
 // ============================================
 
-app.get("/api/books", (req, res) => {
+app.get("/api/books", async (req, res) => {
+    try {
+        const books = await sql`
+            SELECT
+                id,
+                title,
+                author,
+                description,
+                available,
+                "borrowedBy"
+            FROM books
+            ORDER BY id
+        `;
 
-    db.all(
-        `SELECT * FROM books`,
-        [],
-        (err, rows) => {
+        res.json(books);
+    } catch (error) {
+        console.error(error);
 
-            if (err) {
-
-                console.error(err);
-
-                return res.status(500).json({
-                    error: "Failed to load books."
-                });
-
-            }
-
-            res.json(rows);
-
-        }
-    );
-
+        res.status(500).json({
+            error: "Failed to load books."
+        });
+    }
 });
-
 
 // ============================================
 // GET BORROWED BOOKS
 // ============================================
 
-app.get("/api/borrowed-books", (req, res) => {
+app.get("/api/borrowed-books", async (req, res) => {
+    try {
+        const rows = await sql`
+            SELECT
+                borrowed_books.id,
+                borrowed_books."studentName",
+                borrowed_books."studentId",
+                books.title AS book,
+                borrowed_books."bookId",
+                borrowed_books."borrowDate",
+                borrowed_books."returnDate",
+                borrowed_books."userId",
+                borrowed_books.returned
+            FROM borrowed_books
+            INNER JOIN books
+                ON borrowed_books."bookId" = books.id
+            WHERE borrowed_books.returned = 0
+            ORDER BY borrowed_books.id
+        `;
 
-    db.all(
-        `
-        SELECT
-            borrowed_books.id,
-            borrowed_books.studentName,
-            borrowed_books.studentId,
-            books.title AS book,
-            borrowed_books.bookId,
-            borrowed_books.borrowDate,
-            borrowed_books.returnDate,
-            borrowed_books.userId,
-            borrowed_books.returned
+        res.json(rows);
+    } catch (error) {
+        console.error(error);
 
-        FROM borrowed_books
-
-        INNER JOIN books
-            ON borrowed_books.bookId = books.id
-
-        WHERE borrowed_books.returned = 0
-        `,
-        [],
-        (err, rows) => {
-
-            if (err) {
-
-                console.error(err);
-
-                return res.status(500).json({
-                    error: "Failed to load borrowed books."
-                });
-
-            }
-
-            res.json(rows);
-
-        }
-    );
-
+        res.status(500).json({
+            error: "Failed to load borrowed books."
+        });
+    }
 });
-
 
 // ============================================
 // BORROW BOOK
 // ============================================
 
-app.post("/api/borrow", (req, res) => {
-
+app.post("/api/borrow", async (req, res) => {
     const {
         studentName,
         studentId,
@@ -236,7 +155,6 @@ app.post("/api/borrow", (req, res) => {
         userId
     } = req.body;
 
-
     if (
         !studentName ||
         !studentId ||
@@ -245,441 +163,288 @@ app.post("/api/borrow", (req, res) => {
         !returnDate ||
         !userId
     ) {
-
         return res.status(400).json({
             error: "Please fill in all fields."
         });
-
     }
 
-
     if (returnDate < borrowDate) {
-
         return res.status(400).json({
             error: "Return date cannot be before the borrow date."
         });
-
     }
 
+    try {
+        const result = await sql.begin(async (transaction) => {
+            const bookRows = await transaction`
+                SELECT *
+                FROM books
+                WHERE id = ${bookId}
+                FOR UPDATE
+            `;
 
-    db.serialize(() => {
-
-        db.get(
-            `
-            SELECT *
-            FROM books
-            WHERE id = ?
-            `,
-            [bookId],
-            (err, book) => {
-
-                if (err) {
-
-                    console.error(err);
-
-                    return res.status(500).json({
-                        error: "Database error."
-                    });
-
-                }
-
-
-                if (!book) {
-
-                    return res.status(404).json({
-                        error: "Book was not found."
-                    });
-
-                }
-
-
-                if (book.available !== 1) {
-
-                    return res.status(400).json({
-                        error: "BOOK_UNAVAILABLE"
-                    });
-
-                }
-
-
-                // Mark book unavailable
-                db.run(
-                    `
-                    UPDATE books
-                    SET available = 0,
-                        borrowedBy = ?
-                    WHERE id = ?
-                    `,
-                    [userId, bookId],
-                    (updateErr) => {
-
-                        if (updateErr) {
-
-                            console.error(updateErr);
-
-                            return res.status(500).json({
-                                error: "Failed to update book."
-                            });
-
-                        }
-
-
-                        // Create borrowing record
-                        db.run(
-                            `
-                            INSERT INTO borrowed_books
-                            (
-                                studentName,
-                                studentId,
-                                bookId,
-                                borrowDate,
-                                returnDate,
-                                userId,
-                                returned
-                            )
-                            VALUES (?, ?, ?, ?, ?, ?, 0)
-                            `,
-                            [
-                                studentName,
-                                studentId,
-                                bookId,
-                                borrowDate,
-                                returnDate,
-                                userId
-                            ],
-                            function (insertErr) {
-
-                                if (insertErr) {
-
-                                    console.error(insertErr);
-
-                                    return res.status(500).json({
-                                        error: "Failed to save borrowing record."
-                                    });
-
-                                }
-
-
-                                res.json({
-                                    success: true,
-                                    message:
-                                        `"${book.title}" has been borrowed successfully!`
-                                });
-
-                            }
-                        );
-
-                    }
-                );
-
+            if (bookRows.length === 0) {
+                throw new Error("BOOK_NOT_FOUND");
             }
-        );
 
-    });
+            const book = bookRows[0];
 
+            if (Number(book.available) !== 1) {
+                throw new Error("BOOK_UNAVAILABLE");
+            }
+
+            await transaction`
+                UPDATE books
+                SET
+                    available = 0,
+                    "borrowedBy" = ${userId}
+                WHERE id = ${bookId}
+            `;
+
+            await transaction`
+                INSERT INTO borrowed_books
+                (
+                    "studentName",
+                    "studentId",
+                    "bookId",
+                    "borrowDate",
+                    "returnDate",
+                    "userId",
+                    returned
+                )
+                VALUES (
+                    ${studentName},
+                    ${studentId},
+                    ${bookId},
+                    ${borrowDate},
+                    ${returnDate},
+                    ${userId},
+                    0
+                )
+            `;
+
+            return book;
+        });
+
+        res.json({
+            success: true,
+            message: `"${result.title}" has been borrowed successfully!`
+        });
+    } catch (error) {
+        console.error(error);
+
+        if (error.message === "BOOK_NOT_FOUND") {
+            return res.status(404).json({
+                error: "Book was not found."
+            });
+        }
+
+        if (error.message === "BOOK_UNAVAILABLE") {
+            return res.status(400).json({
+                error: "BOOK_UNAVAILABLE"
+            });
+        }
+
+        res.status(500).json({
+            error: "Failed to save borrowing record."
+        });
+    }
 });
-
 
 // ============================================
 // RETURN BOOK
 // ============================================
 
-app.post("/api/return", (req, res) => {
-
+app.post("/api/return", async (req, res) => {
     const {
         borrowId,
         userId
     } = req.body;
 
-
     if (!borrowId || !userId) {
-
         return res.status(400).json({
             error: "Missing information."
         });
-
     }
 
+    try {
+        const borrowRows = await sql`
+            SELECT *
+            FROM borrowed_books
+            WHERE id = ${borrowId}
+        `;
 
-    db.get(
-        `
-        SELECT *
-        FROM borrowed_books
-        WHERE id = ?
-        `,
-        [borrowId],
-        (err, borrow) => {
-
-            if (err) {
-
-                console.error(err);
-
-                return res.status(500).json({
-                    error: "Database error."
-                });
-
-            }
-
-
-            if (!borrow) {
-
-                return res.status(404).json({
-                    error: "Borrow record not found."
-                });
-
-            }
-
-
-            // Only the user who borrowed it can return it
-            if (Number(borrow.userId) !== Number(userId)) {
-
-                return res.status(403).json({
-                    error: "You can only return books you borrowed."
-                });
-
-            }
-
-
-            db.run(
-                `
-                UPDATE books
-                SET available = 1,
-                    borrowedBy = NULL
-                WHERE id = ?
-                `,
-                [borrow.bookId],
-                (bookErr) => {
-
-                    if (bookErr) {
-
-                        console.error(bookErr);
-
-                        return res.status(500).json({
-                            error: "Failed to update book."
-                        });
-
-                    }
-
-
-                    db.run(
-                        `
-                        UPDATE borrowed_books
-                        SET returned = 1
-                        WHERE id = ?
-                        `,
-                        [borrowId],
-                        (borrowErr) => {
-
-                            if (borrowErr) {
-
-                                console.error(borrowErr);
-
-                                return res.status(500).json({
-                                    error: "Failed to return book."
-                                });
-
-                            }
-
-
-                            res.json({
-                                success: true,
-                                message: "Book returned successfully!"
-                            });
-
-                        }
-                    );
-
-                }
-            );
-
+        if (borrowRows.length === 0) {
+            return res.status(404).json({
+                error: "Borrow record not found."
+            });
         }
-    );
 
+        const borrow = borrowRows[0];
+
+        if (Number(borrow.userId) !== Number(userId)) {
+            return res.status(403).json({
+                error: "You can only return books you borrowed."
+            });
+        }
+
+        await sql.begin(async (transaction) => {
+            await transaction`
+                UPDATE books
+                SET
+                    available = 1,
+                    "borrowedBy" = NULL
+                WHERE id = ${borrow.bookId}
+            `;
+
+            await transaction`
+                UPDATE borrowed_books
+                SET returned = 1
+                WHERE id = ${borrowId}
+            `;
+        });
+
+        res.json({
+            success: true,
+            message: "Book returned successfully!"
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Failed to return book."
+        });
+    }
 });
-
 
 // ============================================
 // SIGN UP
 // ============================================
 
-app.post("/api/signup", (req, res) => {
-
+app.post("/api/signup", async (req, res) => {
     const {
         username,
         password
     } = req.body;
 
-
     if (!username || !password) {
-
         return res.status(400).json({
             error: "Please fill all fields."
         });
-
     }
 
-
     if (password.length < 6) {
-
         return res.status(400).json({
             error: "Password must be at least 6 characters."
         });
-
     }
 
+    const cleanUsername = username.trim();
 
-    db.run(
-        `
-        INSERT INTO users
-        (username, password)
-        VALUES (?, ?)
-        `,
-        [
-            username.trim(),
-            password
-        ],
-        function (err) {
+    try {
+        const result = await sql`
+            INSERT INTO users
+            (username, password)
+            VALUES
+            (${cleanUsername}, ${password})
+            RETURNING id, username
+        `;
 
-            if (err) {
+        res.json({
+            success: true,
+            userId: result[0].id,
+            username: result[0].username
+        });
+    } catch (error) {
+        console.error(error);
 
-                if (
-                    err.message.includes(
-                        "UNIQUE constraint failed"
-                    )
-                ) {
-
-                    return res.status(400).json({
-                        error: "Username already exists."
-                    });
-
-                }
-
-
-                console.error(err);
-
-                return res.status(500).json({
-                    error: "Failed to create account."
-                });
-
-            }
-
-
-            res.json({
-                success: true,
-                userId: this.lastID,
-                username: username.trim()
+        if (error.code === "23505") {
+            return res.status(400).json({
+                error: "Username already exists."
             });
-
         }
-    );
 
+        res.status(500).json({
+            error: "Failed to create account."
+        });
+    }
 });
-
 
 // ============================================
 // LOGIN
 // ============================================
 
-app.post("/api/login", (req, res) => {
-
+app.post("/api/login", async (req, res) => {
     const {
         username,
         password
     } = req.body;
 
-
     if (!username || !password) {
-
         return res.status(400).json({
             error: "Please fill all fields."
         });
-
     }
 
+    try {
+        const users = await sql`
+            SELECT id, username
+            FROM users
+            WHERE username = ${username.trim()}
+            AND password = ${password}
+        `;
 
-    db.get(
-        `
-        SELECT id, username
-        FROM users
-        WHERE username = ?
-        AND password = ?
-        `,
-        [
-            username.trim(),
-            password
-        ],
-        (err, user) => {
-
-            if (err) {
-
-                console.error(err);
-
-                return res.status(500).json({
-                    error: "Database error."
-                });
-
-            }
-
-
-            if (!user) {
-
-                return res.status(401).json({
-                    error: "Invalid username or password."
-                });
-
-            }
-
-
-            req.session.user = {
-    id: user.id,
-    username: user.username
-};
-
-res.json({
-    success: true
-});
-
+        if (users.length === 0) {
+            return res.status(401).json({
+                error: "Invalid username or password."
+            });
         }
-    );
 
+        const user = users[0];
+
+        req.session.user = {
+            id: user.id,
+            username: user.username
+        };
+
+        res.json({
+            success: true
+        });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Database error."
+        });
+    }
 });
-
 
 // ============================================
 // CHECK CURRENT USER
 // ============================================
 
 app.get("/api/me", (req, res) => {
-
     if (!req.session.user) {
-
         return res.status(401).json({
             error: "Not logged in."
         });
-
     }
 
     res.json({
         user: req.session.user
     });
-
 });
-
 
 // ============================================
 // LOGOUT
 // ============================================
 
 app.post("/api/logout", (req, res) => {
-
     req.session.destroy((err) => {
-
         if (err) {
-
             return res.status(500).json({
                 error: "Failed to log out."
             });
-
         }
 
         res.clearCookie("connect.sid");
@@ -687,9 +452,7 @@ app.post("/api/logout", (req, res) => {
         res.json({
             success: true
         });
-
     });
-
 });
 
 // ============================================
@@ -697,9 +460,7 @@ app.post("/api/logout", (req, res) => {
 // ============================================
 
 app.listen(PORT, () => {
-
     console.log(
         `Server running at http://localhost:${PORT}`
     );
-
 });
