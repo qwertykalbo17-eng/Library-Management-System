@@ -5,7 +5,12 @@ const postgres = require("postgres");
 const session = require("express-session");
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
+
+console.log("Starting server...");
+console.log("PORT:", PORT);
+console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
 
 // ============================================
 // DATABASE
