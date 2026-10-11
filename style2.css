@@ -1,52 +1,920 @@
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    display: flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    background: #f4f6f9;
+html {
+    overflow-x: hidden;
+    
 }
 
-nav{
-    width: 95.6%;
-    background:#2c3e50;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 30px;
-    position: absolute;
-    top: 0%;
+body {
+    min-height: 100vh;
+    margin: 0;
+
     font-family: 'Poppins', sans-serif;
+    color: white;
+
+    background:
+        radial-gradient(
+            circle at 10% 85%,
+            #0878d1 0%,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            #075cb0 0%,
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #020d3d,
+            #002b70,
+            #020b3c
+        );
+
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
-.logo{
-    color:white;
-    font-size:24px;
-    font-weight:bold;
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+nav {
+    width: 100%;
+    max-width: 100%;
+
+    min-height: 90px;
+
+    padding: 10px 5%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    z-index: 100;
+
+    background: #2c3e50;
+
+    backdrop-filter: blur(10px);
+
+    box-sizing: border-box;
 }
 
-nav ul{
-    list-style:none;
-    display:flex;
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    flex-shrink: 0;
 }
 
-nav ul li{
-    margin-left:20px;
+.logo img {
+    width: 58px;
+    height: 58px;
+
+    object-fit: contain;
+
+    background: white;
+
+    border-radius: 50%;
+
+    padding: 2px;
+
+    display: block;
+
+    flex-shrink: 0;
+
+    box-shadow:
+        0 0 15px rgba(60, 190, 255, 0.5);
 }
 
-nav ul li a{
-    color:white;
-    text-decoration:none;
-    padding:8px 15px;
-    transition:0.3s;
+.logo span {
+    color: white;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    letter-spacing: 1px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
 }
 
-nav ul li a:hover{
-    background:#3498db;
-    border-radius:11px;
+
+/* =====================================================
+   NAVIGATION LINKS
+===================================================== */
+
+nav ul {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 5px;
+
+    flex-shrink: 0;
 }
 
-.content{
-    padding:30px;
+nav ul li {
+    margin: 0;
+    padding: 0;
+
+    flex-shrink: 0;
 }
+
+nav ul li a {
+    display: block;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    padding: 10px 14px;
+
+    border-radius: 20px;
+
+    white-space: nowrap;
+
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    background: #159eea;
+
+    box-shadow:
+        0 0 20px rgba(21, 158, 234, 0.5);
+}
+
+
+/* =====================================================
+   WELCOME CONTENT
+===================================================== */
+
+.content {
+    width: 100%;
+    min-height: 100vh;
+
+    padding-top: 170px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 5;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   INTRO TEXT
+===================================================== */
+
+.content > p:first-child {
+    margin: 0 0 5px;
+
+    color: white;
+
+    font-size: clamp(16px, 2vw, 21px);
+
+    font-weight: 400;
+}
+
+
+/* =====================================================
+   WELCOME TITLE
+===================================================== */
+
+.content h1 {
+    margin: 0 0 20px;
+
+    color: white;
+
+    font-size: clamp(
+        55px,
+        9vw,
+        110px
+    );
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: clamp(
+        -4px,
+        -0.4vw,
+        -2px
+    );
+
+    text-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.2);
+
+    overflow-wrap: break-word;
+}
+
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.content p {
+
+    width: 100%;
+
+    max-width: 700px;
+
+    margin: 0 auto;
+
+    color: #e4f2ff;
+
+    font-size: clamp(
+        14px,
+        1.5vw,
+        16px
+    );
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   EXPLORE BOOKS BUTTON
+===================================================== */
+
+.content a.explore-btn {
+    display: inline-block;
+
+    margin-top: 140px;
+
+    padding: 13px 32px;
+
+    background: white;
+
+    color: #06245e;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+
+    box-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.3);
+}
+
+.content a.explore-btn:hover {
+    transform: translateY(-3px);
+
+    background: #54cfff;
+
+    color: white;
+
+    box-shadow:
+        0 8px 30px rgba(0, 180, 255, 0.5);
+}
+
+
+/* =====================================================
+   USER WELCOME
+===================================================== */
+
+.content h2 {
+    margin-top: 35px;
+
+    color: white;
+
+    font-size: clamp(
+        18px,
+        2vw,
+        22px
+    );
+
+    font-weight: 500;
+}
+
+.content h2 span {
+    color: #58cfff;
+}
+
+
+/* =====================================================
+   BLUE GLOW
+===================================================== */
+
+body::after {
+    content: "";
+
+    position: fixed;
+
+    width: min(600px, 100vw);
+
+    height: 300px;
+
+    left: 50%;
+
+    bottom: -220px;
+
+    transform: translateX(-50%);
+
+    background: #008cff;
+
+    opacity: 0.25;
+
+    filter: blur(100px);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+
+/* =====================================================
+   BOTTOM WAVE
+===================================================== */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    width: 120%;
+
+    height: 180px;
+
+    left: -10%;
+
+    bottom: -120px;
+
+    border-radius: 50%;
+
+    background:
+        repeating-linear-gradient(
+            100deg,
+            transparent 0px,
+            transparent 12px,
+            rgba(55, 180, 255, 0.45) 14px,
+            rgba(150, 225, 255, 0.8) 17px
+        );
+
+    transform: rotate(-5deg);
+
+    filter:
+        drop-shadow(
+            0 0 7px #20aaff
+        );
+
+    opacity: 0.7;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+#welcome {
+    top: 30%;
+    font-size: 300%;
+    font-weight: bold;
+}
+
+#greet {
+    font-size: 150%;
+    font-weight: bold;
+}
+
+#desc {
+    position: absolute;
+    left: 22.5%;
+    top: 43%;
+    font-size: 105%;
+}
+
+/* =====================================================
+   ABOUT PAGE
+===================================================== */
+
+.about-page {
+    width: 100%;
+    min-height: 100vh;
+
+    padding-top: 140px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 80px;
+
+    box-sizing: border-box;
+
+    position: relative;
+    z-index: 5;
+
+    text-align: center;
+
+    overflow-y: auto;
+}
+
+
+/* =====================================================
+   ABOUT TITLE
+===================================================== */
+
+.about-page h1 {
+    margin: 0 0 15px;
+
+    color: white;
+
+    font-size: clamp(
+        45px,
+        7vw,
+        80px
+    );
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    text-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =====================================================
+   ABOUT INTRO
+===================================================== */
+
+.about-intro {
+    width: 100%;
+    max-width: 750px;
+
+    margin: 0 auto 35px;
+
+    color: #e4f2ff;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   ABOUT CONTENT BOX
+===================================================== */
+
+.about-box {
+    width: 100%;
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    padding: 35px;
+
+    box-sizing: border-box;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.25);
+
+    text-align: left;
+}
+
+
+/* =====================================================
+   ABOUT HEADINGS
+===================================================== */
+
+.about-box h2 {
+    margin: 0 0 12px;
+
+    color: #06245e;
+
+    font-size: 25px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   ABOUT TEXT
+===================================================== */
+
+.about-box p {
+    margin: 0 0 25px;
+
+    color: #444;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.about-features {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+
+    margin-top: 25px;
+}
+
+
+/* =====================================================
+   FEATURE CARD
+===================================================== */
+
+.about-feature {
+    padding: 25px 20px;
+
+    background: #f1f7ff;
+
+    border-radius: 15px;
+
+    border: 1px solid #d7e8f8;
+
+    text-align: center;
+
+    transition: all 0.3s ease;
+}
+
+.about-feature:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 8px 25px rgba(21, 158, 234, 0.2);
+}
+
+.about-feature h3 {
+    margin: 0 0 10px;
+
+    color: #06245e;
+
+    font-size: 18px;
+}
+
+.about-feature p {
+    margin: 0;
+
+    color: #555;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   SCHOOL INFORMATION
+===================================================== */
+
+.school-info {
+    margin-top: 30px;
+
+    padding: 25px;
+
+    background: #f1f7ff;
+
+    border-radius: 15px;
+
+    border-left: 5px solid #159eea;
+}
+
+.school-info h2 {
+    margin-bottom: 10px;
+}
+
+.school-info p {
+    margin-bottom: 0;
+}
+
+
+/* =====================================================
+   ABOUT FOOTER
+===================================================== */
+
+.about-footer {
+    margin-top: 30px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #d8e2ec;
+
+    text-align: center;
+}
+
+.about-footer p {
+    margin: 0;
+
+    color: #666;
+}
+
+#schoolname {
+    font-weight: bold;
+}
+
+/* =====================================================
+   HOME PAGE
+===================================================== */
+
+.home-page {
+
+    width: 100%;
+    min-height: 100vh;
+
+    padding-top: 150px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 60px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    position: relative;
+
+    z-index: 5;
+
+}
+
+
+/* =====================================================
+   SMALL LABEL
+===================================================== */
+
+.home-label {
+
+    margin: 0 0 12px;
+
+    color: #65d2ff;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+/* =====================================================
+   HOME TITLE
+===================================================== */
+
+.home-title {
+
+    margin: 0;
+
+    color: white;
+
+    font-size: clamp(
+        50px,
+        8vw,
+        90px
+    );
+
+    font-weight: 800;
+
+    line-height: 1.05;
+
+    letter-spacing: -3px;
+
+    text-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.25);
+
+}
+
+
+.home-title span {
+
+    color: #58cfff;
+
+}
+
+
+/* =====================================================
+   DESCRIPTION
+===================================================== */
+
+.home-description {
+
+    width: 100%;
+
+    max-width: 650px;
+
+    margin: 22px auto 0;
+
+    color: #e4f2ff;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+
+}
+
+
+/* =====================================================
+   EXPLORE BUTTON
+===================================================== */
+
+.home-page .explore-btn {
+
+    display: inline-block;
+
+    margin-top: 30px;
+
+    padding: 13px 32px;
+
+    background: white;
+
+    color: #06245e;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    transition: all 0.3s ease;
+
+    box-shadow:
+        0 5px 25px rgba(0, 0, 0, 0.3);
+
+}
+
+
+.home-page .explore-btn:hover {
+
+    transform: translateY(-4px);
+
+    background: #54cfff;
+
+    color: white;
+
+    box-shadow:
+        0 8px 30px rgba(0, 180, 255, 0.5);
+
+}
+
+
+/* =====================================================
+   FEATURE CARDS
+===================================================== */
+
+.home-features {
+
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: 55px auto 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 20px;
+
+}
+
+
+/* =====================================================
+   FEATURE
+===================================================== */
+
+.home-feature {
+
+    padding: 22px 18px;
+
+    background:
+        rgba(255, 255, 255, 0.10);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.15);
+
+    border-radius: 15px;
+
+    backdrop-filter: blur(10px);
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+
+}
+
+
+.home-feature:hover {
+
+    transform: translateY(-6px);
+
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.2);
+
+}
+
+
+/* =====================================================
+   FEATURE ICON
+===================================================== */
+
+.feature-icon {
+
+    width: 50px;
+
+    height: 50px;
+
+    margin: 0 auto 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(84, 207, 255, 0.15);
+
+    border-radius: 50%;
+
+    font-size: 23px;
+
+}
+
+
+/* =====================================================
+   FEATURE TITLE
+===================================================== */
+
+.home-feature h3 {
+
+    margin: 0 0 8px;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+}
+
+
+/* =====================================================
+   FEATURE DESCRIPTION
+===================================================== */
+
+.home-feature p {
+
+    margin: 0;
+
+    color: #d9efff;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+}
+

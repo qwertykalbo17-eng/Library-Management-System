@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About - Library Management System</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav>
+
+        <div class="logo">
+            <img src="MMSC.webp" alt="MMSC Logo">
+            <span>MY MESSIAH SCHOOL OF CAVITE</span>
+        </div>
+
+        <ul>
+            <li>
+                <a href="Home.html">Home</a>
+            </li>
+
+            <li>
+                <a href="Books.html">Books</a>
+            </li>
+
+            <li>
+                <a href="Borrow.html">Borrow</a>
+            </li>
+
+            <li>
+                <a href="about.html">About</a>
+            </li>
+
+            <li>
+                <a href="#" onclick="logout()">Logout</a>
+            </li>
+        </ul>
+
+    </nav>
+
+
+    <!-- ABOUT PAGE -->
+    <main class="about-page">
+
+        <h1>ABOUT US</h1>
+
+        <p class="about-intro">
+            Learn more about the Library Management System of
+            My Messiah School of Cavite – Delas Alas Campus.
+        </p>
+
+
+        <section class="about-box">
+
+            <h2>Library Management System</h2>
+
+            <p>
+                The Library Management System is a web-based system
+                designed to make library services more convenient,
+                organized, and accessible for Senior High School students.
+            </p>
+
+            <p>
+                Through this system, students can view available books,
+                search for books, borrow books, and keep track of their
+                borrowed books.
+            </p>
+
+
+            <!-- FEATURES -->
+
+            <div class="about-features">
+
+                <div class="about-feature">
+
+                    <h3>Browse Books</h3>
+
+                    <p>
+                        Easily view and search for books available
+                        in the school library.
+                    </p>
+
+                </div>
+
+
+                <div class="about-feature">
+
+                    <h3>Borrow Books</h3>
+
+                    <p>
+                        Borrow available books by providing the
+                        required information.
+                    </p>
+
+                </div>
+
+
+                <div class="about-feature">
+
+                    <h3>Track Books</h3>
+
+                    <p>
+                        Keep track of borrowed books and return
+                        them when needed.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCHOOL INFORMATION -->
+
+            <div class="school-info">
+
+                <h2>My Messiah School of Cavite</h2>
+
+                <p>
+                    <strong>Delas Alas Campus</strong><br>
+                    Senior High School Department
+                </p>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="about-footer">
+
+                <p>
+                    Library Management System
+                </p>
+
+                <p>
+                    Making library services simpler, faster,
+                    and more organized.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- LOGOUT -->
+    <script>
+
+        async function logout() {
+
+            try {
+
+                await fetch("/api/logout", {
+                    method: "POST"
+                });
+
+                window.location.href = "Login.html";
+
+            } catch (error) {
+
+                console.error("Logout error:", error);
+
+                window.location.href = "Login.html";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

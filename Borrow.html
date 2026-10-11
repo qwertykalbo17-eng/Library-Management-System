@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Borrow</title>
+    <title>Library - Borrow</title>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
@@ -70,9 +70,7 @@
 
     <div class="content">
 
-        <h1>
-            Welcome, <span id="user"></span>!
-        </h1>
+        
 
 
         <div class="main">
@@ -107,13 +105,29 @@
 
                 <!-- Book Selection -->
 
-                <select id="bookSelect">
+                <div class="book-selection">
 
+                <label for="bookSearch">
+                    Search Book
+                </label>
+
+                <input
+                    type="text"
+                    id="bookSearch"
+                    placeholder="Search for a book..."
+                    autocomplete="off"
+                >
+
+                <label for="bookSelect">
+                    Select a Book
+                </label>
+
+                <select id="bookSelect">
                     <option value="">
                         Select a Book
                     </option>
-
                 </select>
+                </div>
 
 
                 <!-- Borrow Date -->

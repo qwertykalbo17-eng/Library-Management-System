@@ -210,40 +210,58 @@ function loadBooks() {
     const bookSelect =
         document.getElementById("bookSelect");
 
-
     if (!bookSelect) {
         return;
     }
 
+    const searchInput =
+        document.getElementById("bookSearch");
 
-    bookSelect.innerHTML =
-        `<option value="">
+    const search =
+        searchInput
+            ? searchInput.value.toLowerCase().trim()
+            : "";
+
+    bookSelect.innerHTML = `
+        <option value="">
             Select a Book
-        </option>`;
-
+        </option>
+    `;
 
     books.forEach(book => {
 
-        if (book.available === 1) {
+        const available =
+            Number(book.available) === 1 ||
+            book.available === true;
 
-            const option =
-                document.createElement("option");
-
-
-            option.value =
-                book.id;
-
-
-            option.textContent =
-                book.title;
-
-
-            bookSelect.appendChild(option);
-
+        if (!available) {
+            return;
         }
 
-    });
+        const title =
+            String(book.title || "").toLowerCase();
 
+        const author =
+            String(book.author || "").toLowerCase();
+
+        if (
+            search &&
+            !title.includes(search) &&
+            !author.includes(search)
+        ) {
+            return;
+        }
+
+        const option =
+            document.createElement("option");
+
+        option.value = book.id;
+
+        option.textContent =
+            book.title;
+
+        bookSelect.appendChild(option);
+    });
 }
 
 
@@ -356,8 +374,6 @@ async function () {
                         returnDate:
                             returnDate,
 
-                        userId:
-                            currentUser.id
 
                     })
 
@@ -705,8 +721,6 @@ async function (id) {
                         borrowId:
                             Number(id),
 
-                        userId:
-                            currentUser.id
 
                     })
 
@@ -814,8 +828,9 @@ function updateBookAvailability() {
 
         const available =
             bookData
-                ? bookData.available === 1
-                : true;
+                ? Number(bookData.available) === 1 ||
+                bookData.available === true
+            : true;
 
 
         if (!available) {
@@ -1012,9 +1027,34 @@ function () {
 
 };
 
+function setupBookSearch() {
+
+    const searchInput =
+        document.getElementById("bookSearch");
+
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.addEventListener(
+        "input",
+        function () {
+            loadBooks();
+        }
+    );
+}
 
 // ============================================
 // START
 // ============================================
 
-initializeLibrary();
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
+
+        setupBookSearch();
+
+        await initializeLibrary();
+
+    }
+);

@@ -99,16 +99,15 @@ app.get("/api/test", async (req, res) => {
 app.get("/api/books", async (req, res) => {
     try {
         const books = await sql`
-            SELECT
-                id,
-                title,
-                author,
-                description,
-                available,
-                "borrowedBy"
-            FROM books
-            ORDER BY id
-        `;
+        SELECT
+        id,
+        title,
+        author,
+        available,
+        "borrowedBy"
+    FROM books
+    ORDER BY id
+`;
 
         res.json(books);
     } catch (error) {
@@ -158,23 +157,34 @@ app.get("/api/borrowed-books", async (req, res) => {
 // BORROW BOOK
 // ============================================
 
+// ============================================
+// BORROW BOOK
+// ============================================
+
 app.post("/api/borrow", async (req, res) => {
     const {
         studentName,
         studentId,
         bookId,
         borrowDate,
-        returnDate,
-        userId
+        returnDate
     } = req.body;
+
+    // Get user ID from the server-side session
+    if (!req.session.user) {
+        return res.status(401).json({
+            error: "You must be logged in."
+        });
+    }
+
+    const userId = req.session.user.id;
 
     if (
         !studentName ||
         !studentId ||
         !bookId ||
         !borrowDate ||
-        !returnDate ||
-        !userId
+        !returnDate
     ) {
         return res.status(400).json({
             error: "Please fill in all fields."
@@ -243,6 +253,7 @@ app.post("/api/borrow", async (req, res) => {
             success: true,
             message: `"${result.title}" has been borrowed successfully!`
         });
+
     } catch (error) {
         console.error(error);
 
@@ -268,13 +279,23 @@ app.post("/api/borrow", async (req, res) => {
 // RETURN BOOK
 // ============================================
 
-app.post("/api/return", async (req, res) => {
-    const {
-        borrowId,
-        userId
-    } = req.body;
+// ============================================
+// RETURN BOOK
+// ============================================
 
-    if (!borrowId || !userId) {
+app.post("/api/return", async (req, res) => {
+    const { borrowId } = req.body;
+
+    // Get user ID from the server-side session
+    if (!req.session.user) {
+        return res.status(401).json({
+            error: "You must be logged in."
+        });
+    }
+
+    const userId = req.session.user.id;
+
+    if (!borrowId) {
         return res.status(400).json({
             error: "Missing information."
         });
@@ -295,6 +316,7 @@ app.post("/api/return", async (req, res) => {
 
         const borrow = borrowRows[0];
 
+        // Compare the database user ID with the logged-in session user ID
         if (Number(borrow.userId) !== Number(userId)) {
             return res.status(403).json({
                 error: "You can only return books you borrowed."
@@ -321,6 +343,7 @@ app.post("/api/return", async (req, res) => {
             success: true,
             message: "Book returned successfully!"
         });
+
     } catch (error) {
         console.error(error);
 
@@ -469,6 +492,14 @@ app.post("/api/logout", (req, res) => {
 });
 
 // ============================================
+// HEALTH CHECK FOR RENDER
+// ============================================
+
+app.get("/healthz", (req, res) => {
+    res.status(200).send("OK");
+});
+
+// ============================================
 // START SERVER
 // ============================================
 
@@ -482,6 +513,7 @@ const server = app.listen(PORT, "0.0.0.0", () => {
     console.log("PORT:", PORT);
     console.log("=================================");
 });
+
 
 server.on("error", (error) => {
     console.error("SERVER ERROR:", error);
